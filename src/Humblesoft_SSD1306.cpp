@@ -132,10 +132,28 @@ void Humblesoft_SSD1306::display(uint8_t c0, uint8_t c1, uint8_t p0, uint8_t p1,
   m_modified = false;
 }
 
-		   
 void Humblesoft_SSD1306::update()
 {
   if(m_modified && millis() - m_tModified > m_timeout)
     display();
+}
+
+void Humblesoft_SSD1306::writeData(uint8_t *data, uint32_t data_len)
+{
+  uint8_t c0 = 0;
+  uint8_t c1 = SSD1306_WIDTH-1;
+  uint8_t p0 = 0;
+  uint8_t p1 = SSD1306_HEIGHT/8-1;
+  
+  writeCmd(0x21);		// set colum addr
+  writeCmd(c0);
+  writeCmd(c1);
+  writeCmd(0x22);		// set page addr
+  writeCmd(p0);
+  writeCmd(p1);
+  digitalWrite(m_dc, HIGH);
+  digitalWrite(m_cs, LOW);
+  SPI.writeBytes(data, data_len);
+  digitalWrite(m_cs, HIGH);
 }
 

@@ -22,7 +22,7 @@ class Humblesoft_SSD1306 : public Humblesoft_GFX {
 
  public:
   Humblesoft_SSD1306(int8_t dc=15, int8_t rst=-1, int8_t cs=2);
-  uint16_t colorRGB(uint8_t r, uint8_t g, uint8_t b) override {
+  uint16_t rgb(uint8_t r, uint8_t g, uint8_t b) override {
     return (r == 0 && g == 0 && b == 0) ? BLACK : WHITE;
   }
   void clear() { memset(m_imgBuf, 0, SSD1306_BUF_SIZE);}
@@ -39,6 +39,7 @@ class Humblesoft_SSD1306 : public Humblesoft_GFX {
 	       uint8_t p0 = 0, uint8_t p1 = SSD1306_HEIGHT/8-1,
 	       const uint8_t *buf = NULL);
   void update();
+  void writeData(uint8_t *data, uint32_t data_len);
   
  protected:
   void writeCmd(uint8_t cmd);
