@@ -40,6 +40,11 @@ class Humblesoft_SSD1306 : public Humblesoft_GFX {
 	       const uint8_t *buf = NULL);
   void update();
   void writeData(uint8_t *data, uint32_t data_len);
+  void shift_left(int16_t x, int16_t y, uint16_t w, uint16_t h, int16_t shift);
+  void shift_left_nr(int16_t x0, int16_t y0, int16_t x1,int16_t y1,
+		     int16_t shift);
+  void shift_up_nr(int16_t x0, int16_t y0, int16_t x1, int16_t y1);
+  void shift_down_nr(int16_t x0, int16_t y0, int16_t x1, int16_t y1);
   
  protected:
   void writeCmd(uint8_t cmd);

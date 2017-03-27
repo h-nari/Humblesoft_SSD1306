@@ -12,6 +12,15 @@ SSD1306コントローラを用いたOLED用Arduino library
 
 ## スケッチの例(examples)の説明
 
+### scrollText_example
+
+<img hspace="20" src="https://github.com/h-nari/Humblesoft_SSD1306/blob/master/img/170327a5.jpg?raw=true" width="320" align="right">
+* 文字のスクロール表示機能(ScrollTextクラス)のデモ
+* スクロール速度を変えて表示
+ * dps = dot per second
+* 動画: <a href="https://youtu.be/_Fvh-PVP-tY">YouTube</a>
+<br clear="right"/>
+
 ### kanjiDisp
 
 <img hspace="20" src="https://github.com/h-nari/Humblesoft_SSD1306/blob/master/img/170127a1.jpg?raw=true" width="320" align="right">
@@ -42,3 +51,10 @@ SSD1306コントローラを用いたOLED用Arduino library
 
 * Adafruit_SSD1306
 * I2C 極小 OLED（ 有機EL ) SSD1306 を Arduino でライブラリを使わずに動作させてみました](https://www.mgo-tec.com/blog-entry-31.html "I2C 極小 OLED（ 有機EL ) SSD1306 を Arduino でライブラリを使わずに動作させてみました")
+
+## 変更履歴
+
+### 2017/03/27(Mon)
+
+* scrollTextクラスを追加
+* examplesにscrollText_exampleを追加

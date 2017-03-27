@@ -157,3 +157,137 @@ void Humblesoft_SSD1306::writeData(uint8_t *data, uint32_t data_len)
   digitalWrite(m_cs, HIGH);
 }
 
+void Humblesoft_SSD1306::shift_left(int16_t x, int16_t y,
+				   uint16_t w, uint16_t h, int16_t shift)
+{
+  int16_t x0 = x;
+  int16_t y0 = y;
+  int16_t x1 = x + w;
+  int16_t y1 = y + h;
+
+  if(x0 < 0) x0 = 0;
+  if(y0 < 0) y0 = 0;
+  if(x1 > _width)  x1 = _width;
+  if(y1 > _height) y1 = _height;
+  
+  
+  switch(rotation & 3){
+    int16_t xr0,xr1,yr0,yr1;
+  case 0:
+    shift_left_nr(x0, y0, x1, y1, shift);
+    break;
+  case 1:
+    xr0 = _height - y1;
+    xr1 = _height - y0 - 1;
+    yr0 = x0;
+    yr1 = x1;
+    for(int i=0;i<shift;i++)
+      shift_up_nr(xr0,yr0,xr1,yr1);
+    break;
+  case 2:
+    xr0 = _width - x1;
+    xr1 = _width - x0 - 1;
+    yr0 = _height - y1;
+    yr1 = _height - y0 - 1;
+    shift_left_nr(xr0,yr0,xr1,yr1,-shift);
+    break;
+  case 3:
+    xr0 = y0;
+    xr1 = y1;
+    yr0 = _width - x1;
+    yr1 = _width - x0 - 1;
+    for(int i=0;i<shift;i++)
+      shift_down_nr(xr0,yr0,xr1,yr1);
+    break;
+  }
+}
+
+
+/* no rotation */
+void Humblesoft_SSD1306::shift_left_nr(int16_t x0, int16_t y0,
+				       int16_t x1, int16_t y1, int16_t shift)
+{
+  for(int row = y0/8; row*8 < y1; row++){
+    uint8_t mask = 0xff;
+    if(row*8 < y0){
+      uint8_t b = y0 - row*8;
+      mask &= 0xff << b;
+    }
+    if((row+1)*8 > y1){
+      uint8_t b = (row+1)*8 - y1;
+      mask &= 0xff >> b;
+    }
+
+    int i;
+    if(shift > 0){
+      for(i=x0;i<x1-shift;i++){
+	m_imgBuf[SSD1306_WIDTH*row+i] =
+	  (m_imgBuf[SSD1306_WIDTH*row+i] & ~mask) |
+	  (m_imgBuf[SSD1306_WIDTH*row+i+shift] & mask);
+      }
+      for(;i<x1;i++){
+	m_imgBuf[SSD1306_WIDTH*row+i] =
+	  m_imgBuf[SSD1306_WIDTH*row+i] & ~mask;
+      }
+    }
+    else if(shift < 0){
+      for(i=x1-1;i>=x0-shift; i--){
+	m_imgBuf[SSD1306_WIDTH*row+i] =
+	  (m_imgBuf[SSD1306_WIDTH*row+i] & ~mask) |
+	  (m_imgBuf[SSD1306_WIDTH*row+i+shift] & mask);
+      }
+      for(;i>=x0; i--){
+	m_imgBuf[SSD1306_WIDTH*row+i] =
+	  m_imgBuf[SSD1306_WIDTH*row+i] & ~mask;
+      }
+    }
+  }
+}
+
+void Humblesoft_SSD1306::shift_up_nr(int16_t x0, int16_t y0,
+				     int16_t x1, int16_t y1)
+{
+  for(int row = y0/8; row*8 < y1; row++){
+    uint8_t mask = 0xff;
+    if(row*8 < y0){
+      uint8_t b = y0 - row*8;
+      mask &= 0xff << b;
+    }
+    if((row+1)*8 > y1){
+      uint8_t b = (row+1)*8 - y1;
+      mask &= 0xff >> b;
+    }
+
+    for(int i=x0;i<x1;i++){
+      m_imgBuf[SSD1306_WIDTH*row+i] =
+	(m_imgBuf[SSD1306_WIDTH*row+i] & ~mask) |
+	((m_imgBuf[SSD1306_WIDTH*row+i] >> 1) & mask);
+      if((row+1)*8 < y1 && (m_imgBuf[SSD1306_WIDTH*(row+1)+i] & 1))
+	m_imgBuf[SSD1306_WIDTH*row+i] |= 0x80;
+    }
+  }
+}
+
+void Humblesoft_SSD1306::shift_down_nr(int16_t x0, int16_t y0,
+				     int16_t x1, int16_t y1)
+{
+  for(int row = (y1-1)/8; row*8+7 >= y0; row--){
+    uint8_t mask = 0xff;
+    if(row*8 < y0){
+      uint8_t b = y0 - row*8;
+      mask &= 0xff << b;
+    }
+    if((row+1)*8 > y1){
+      uint8_t b = (row+1)*8 - y1;
+      mask &= 0xff >> b;
+    }
+
+    for(int i=x0;i<x1;i++){
+      m_imgBuf[SSD1306_WIDTH*row+i] =
+	(m_imgBuf[SSD1306_WIDTH*row+i] & ~mask) |
+	((m_imgBuf[SSD1306_WIDTH*row+i] << 1) & mask);
+      if(row*8-1 >= y0 && (m_imgBuf[SSD1306_WIDTH*(row-1)+i] & 0x80))
+	m_imgBuf[SSD1306_WIDTH*row+i] |= 1;
+    }
+  }
+}
