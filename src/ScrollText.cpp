@@ -16,9 +16,9 @@ ScrollText::ScrollText(Humblesoft_SSD1306 *oled) :
   m_bitmap.setTextColor(1,0);
 }
 
-void ScrollText::clear()
+void ScrollText::clear(int16_t x)
 {
-  m_xi = 0;
+  m_xi = x;
   m_str = "";
   m_ri = m_gw = 0;
 }

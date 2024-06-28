@@ -36,7 +36,7 @@ class ScrollText : public Print {
   ScrollText(Humblesoft_SSD1306 *oled);
   size_t write(uint8_t) override;
   bool update();
-  void clear();
+  void clear(int16_t x=0);
   void setScrollArea(int16_t x, int16_t y, uint16_t w, uint16_t h);
   void setWritePosition(int16_t x);
   void setTextSize(uint8_t s) { m_bitmap.setTextSize(s);}
