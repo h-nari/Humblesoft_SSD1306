@@ -21,8 +21,8 @@ class Humblesoft_SSD1306 : public Humblesoft_GFX {
   uint8_t m_imgBuf[SSD1306_BUF_SIZE];
 
  public:
-  Humblesoft_SSD1306(int8_t dc=15, int8_t rst=-1, int8_t cs=2);
-  uint16_t rgb(uint8_t r, uint8_t g, uint8_t b) override {
+  Humblesoft_SSD1306(int8_t dc=15, int8_t rst=16, int8_t cs=2);
+  static uint16_t rgb(uint8_t r, uint8_t g, uint8_t b) {
     return (r == 0 && g == 0 && b == 0) ? BLACK : WHITE;
   }
   void clear() { memset(m_imgBuf, 0, SSD1306_BUF_SIZE);}
