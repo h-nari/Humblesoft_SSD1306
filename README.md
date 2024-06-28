@@ -58,6 +58,15 @@ SSD1306コントローラを用いたOLED用Arduino library
 
 ## 変更履歴
 
+### 2024/06/28(Mon)
+
+* version 1.1.0
+* Adafruit_GFX_Library 1.11.9 で動作確認
+* SSD1306リセット後のディレイ 1ms追加
+* rgbメソッドに static追加、 override除去
+* ScrollText#clearメソッドで 描画x座標指定可能に変更
+
+
 ### 2017/03/27(Mon)
 
 * scrollTextクラスを追加
