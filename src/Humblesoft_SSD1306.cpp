@@ -34,6 +34,7 @@ void Humblesoft_SSD1306::begin(bool reset)
     digitalWrite(m_rst, LOW);
     delay(10);
     digitalWrite(m_rst, HIGH);
+    delay(1);
   }
 
   writeCmd(0xae); 		// Set Display OFF
